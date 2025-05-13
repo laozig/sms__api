@@ -94,5 +94,3 @@ documentation/
 *.xlsx
 *.xls
 concurrent_test_guide.md
-API_DOCS.md
-API_DEVELOPMENT_GUIDE.md 
