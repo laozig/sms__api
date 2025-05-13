@@ -84,7 +84,6 @@ create_test_project.py
 # 文档文件 (保留README.md)
 docs/
 documentation/
-*.md
 !README.md
 *.pdf
 *.docx
