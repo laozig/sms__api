@@ -44,7 +44,7 @@ sms_api/
 1. **克隆仓库**
 
 ```bash
-git clone https://github.com/yourusername/sms_api.git
+git clone https://github.com/laozig/sms__api.git
 cd sms_api
 ```
 
