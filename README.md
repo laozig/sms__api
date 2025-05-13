@@ -22,14 +22,30 @@ SMS API是一个用于管理短信验证码的API服务，提供手机号码获�
 
 ```
 sms_api/
-├── app.py              # 应用主入口
-├── config.py           # 配置文件
-├── models.py           # 数据库模型
-├── routes.py           # API路由
-├── async_util.py       # 异步工具
-├── phone_utils.py      # 手机号工具
-└── logs/               # 日志目录
+├── app.py              # 应用主入口，Flask应用创建和配置
+├── routes.py           # API路由定义文件，包含所有API端点
+├── models.py           # 数据库模型定义
+├── config.py           # 应用配置文件
+├── constants.py        # 常量定义文件
+├── utils.py            # 通用工具函数
+├── phone_utils.py      # 手机号处理相关功能
+├── async_util.py       # 异步功能实现工具
+├── gunicorn_config.py  # Gunicorn服务器配置文件
+├── check_environment.py # 环境检查脚本
+├── static/             # 静态文件目录
+│   ├── index.html      # API文档HTML页面
+│   └── ty.html         # 项目首页HTML页面
+├── logs/               # 日志目录
+├── instance/           # Flask实例配置目录
+├── API_DOCS.md         # API文档的Markdown版本
+└── API_DEVELOPMENT_GUIDE.md # API开发指南
 ```
+
+### 路由信息
+
+- `/`: 默认路由，显示项目首页(ty.html)
+- `/api-docs`: API文档路由，显示API文档(index.html)
+- `/index.html`: 直接访问API文档的替代路由
 
 ## 环境配置搭建
 
