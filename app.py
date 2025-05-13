@@ -62,6 +62,10 @@ def create_app(config_name='default'):
     def api_docs():
         return app.send_static_file('index.html')
     
+    @app.route('/index.html')
+    def index_html():
+        return app.send_static_file('index.html')
+    
     # 导入并注册路由
     from routes import api
     app.register_blueprint(api, url_prefix='/api')
