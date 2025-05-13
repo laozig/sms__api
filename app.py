@@ -53,6 +53,15 @@ def create_app(config_name='default'):
         app.logger.error('服务器错误: %s', str(error))
         return jsonify({'error': '服务器内部错误'}), 500
     
+    # 添加静态文件路由
+    @app.route('/')
+    def index():
+        return app.send_static_file('ty.html')
+    
+    @app.route('/api-docs')
+    def api_docs():
+        return app.send_static_file('index.html')
+    
     # 导入并注册路由
     from routes import api
     app.register_blueprint(api, url_prefix='/api')
