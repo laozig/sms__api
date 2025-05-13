@@ -1,0 +1,98 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+.venv/
+venv/
+ENV/
+env.bak/
+venv.bak/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 数据库文件
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# 日志文件
+*.log
+logs/
+
+# Flask项目相关
+instance/
+.webassets-cache
+
+# IDE相关
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.spyderproject
+.spyproject
+.ropeproject
+
+# 临时文件
+.coverage
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+coverage.xml
+*.cover
+*.mo
+*.pot
+.hypothesis/
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# 项目特定文件
+sms_api.db
+
+# 测试文件
+tests/
+test_*.py
+*_test.py
+*_tests.py
+tests.py
+api_test.py
+load_test.py
+concurrent_test.py
+concurrent_api_test.py
+init_test_data.py
+create_test_project.py
+
+# 文档文件 (保留README.md)
+docs/
+documentation/
+*.md
+!README.md
+*.pdf
+*.docx
+*.doc
+*.pptx
+*.ppt
+*.xlsx
+*.xls
+concurrent_test_guide.md
+API_DOCS.md
+API_DEVELOPMENT_GUIDE.md 

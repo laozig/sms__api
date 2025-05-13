@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>糖云API文档</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-light: #4895ef;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --text-color: #333;
+            --text-light: #666;
+            --bg-color: #f8f9fa;
+            --white: #ffffff;
+            --sidebar-width: 280px;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'SF Pro Text', 'SF Pro Icons', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: var(--white);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            z-index: 10;
+            padding: 1.5rem 0;
+            transition: var(--transition);
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .logo i {
+            font-size: 1.4rem;
+        }
+        
+        .logo-text {
+            letter-spacing: 0.5px;
+        }
+        
+        .version {
+            margin-top: 0.5rem;
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .sidebar h2 {
+            padding: 0 1.5rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 1.5rem 0 0.5rem;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            margin: 0.2rem 0;
+        }
+        
+        .sidebar li a {
+            display: flex;
+            align-items: center;
+            padding: 0.7rem 1.5rem;
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            font-size: 0.9rem;
+        }
+        
+        .sidebar li a i {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar li a:hover, .sidebar li a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border-left-color: var(--accent-color);
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            width: calc(100% - var(--sidebar-width));
+            max-width: 1200px;
+        }
+        
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-color);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .search-box input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            outline: none;
+        }
+        
+        .search-box i {
+            color: var(--text-light);
+        }
+        
+        .api-doc {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .api-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .api-section.active {
+            display: block;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .method-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 0.35rem 0.7rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 0.8rem;
+        }
+        
+        .get {
+            background-color: #61affe;
+            color: var(--white);
+        }
+        
+        .post {
+            background-color: #49cc90;
+            color: var(--white);
+        }
+        
+        .endpoint {
+            padding: 0.5rem 0.8rem;
+            background-color: var(--bg-color);
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            word-break: break-all;
+        }
+        
+        .description {
+            margin: 1.5rem 0;
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0 2rem;
+            font-size: 0.9rem;
+        }
+        
+        th, td {
+            border: 1px solid #eee;
+            padding: 0.8rem 1rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--bg-color);
+            font-weight: 600;
+        }
+        
+        tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .response-example {
+            background-color: #272822;
+            color: #f8f8f2;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1rem 0 2rem;
+        }
+        
+        .code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            white-space: pre-wrap;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
+        .status-code {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+        
+        .status-code i {
+            margin-right: 0.35rem;
+            font-size: 0.9rem;
+        }
+        
+        .status-200, .status-201 {
+            background-color: #49cc90;
+            color: var(--white);
+        }
+        
+        .status-400, .status-401, .status-404 {
+            background-color: #ff6b6b;
+            color: var(--white);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 20;
+            font-size: 1.5rem;
+            background-color: var(--primary-color);
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: var(--box-shadow);
+        }
+        
+        @media (max-width: 992px) {
+            :root {
+                --sidebar-width: 240px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 1rem;
+            }
+            
+            .mobile-menu {
+                display: flex;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-box {
+                margin-top: 1rem;
+                max-width: 100%;
+            }
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-menu" id="mobile-menu">
+        <i class="ri-menu-line"></i>
+    </div>
+    
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="ri-message-2-line"></i>
+                <div class="logo-text">糖云 API</div>
+            </div>
+            <div class="version">v1.0</div>
+        </div>
+        
+        <h2>简介</h2>
+        <ul>
+            <li><a href="#overview" class="nav-link active"><i class="ri-home-line"></i>概述</a></li>
+            <li><a href="#auth" class="nav-link"><i class="ri-shield-keyhole-line"></i>认证方式</a></li>
+        </ul>
+        
+        <h2>用户管理</h2>
+        <ul>
+            <li><a href="#register" class="nav-link"><i class="ri-user-add-line"></i>注册用户</a></li>
+            <li><a href="#login" class="nav-link"><i class="ri-login-box-line"></i>用户登录</a></li>
+            <li><a href="#balance" class="nav-link"><i class="ri-coin-line"></i>查询余额</a></li>
+            <li><a href="#change-password" class="nav-link"><i class="ri-lock-password-line"></i>修改密码</a></li>
+        </ul>
+        
+        <h2>手机号管理</h2>
+        <ul>
+            <li><a href="#get-phone" class="nav-link"><i class="ri-smartphone-line"></i>获取手机号</a></li>
+            <li><a href="#get-specified-phone" class="nav-link"><i class="ri-smartphone-line"></i>获取指定手机号</a></li>
+            <li><a href="#release-phone" class="nav-link"><i class="ri-arrow-go-back-line"></i>释放手机号</a></li>
+            <li><a href="#blacklist-phone" class="nav-link"><i class="ri-shield-cross-line"></i>加黑手机号</a></li>
+        </ul>
+        
+        <h2>短信验证码</h2>
+        <ul>
+            <li><a href="#get-sms-code" class="nav-link"><i class="ri-message-3-line"></i>获取短信验证码</a></li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <div class="top-bar">
+            <h1 class="page-title">糖云API文档</h1>
+            <div class="search-box">
+                <i class="ri-search-line"></i>
+                <input type="text" id="search-input" placeholder="搜索API...">
+            </div>
+        </div>
+        
+        <div class="api-doc">
+            <div id="overview" class="api-section active">
+                <h1>API 概述</h1>
+                <p class="description">
+                    短信验证码API提供完整的短信验证码解决方案，让开发者能够轻松集成短信验证功能到自己的应用中。
+                    我们的API服务稳定可靠，提供高并发支持，确保您的应用能够快速获取和验证短信验证码。
+                </p>
+                
+                <div class="section-title"><i class="ri-global-line"></i>基础URL</div>
+                <div class="endpoint">http://127.0.0.1:5000/api</div>
+                
+                <div class="section-title"><i class="ri-award-line"></i>API特点</div>
+                <ul>
+                    <li>提供多种功能完整的API接口</li>
+                    <li>支持多种运营商和号段类型</li>
+                    <li>高并发处理能力，平均响应时间低</li>
+                    <li>完善的用户管理和余额控制</li>
+                    <li>简单易用的RESTful API设计</li>
+                </ul>
+                
+                <div class="section-title"><i class="ri-speed-line"></i>性能指标</div>
+                <p>系统在中等并发负载下表现良好：</p>
+                <ul>
+                    <li>根路由API：50并发用户下，RPS约115.82，平均响应时间12.48毫秒</li>
+                    <li>搜索项目API：50并发用户下，RPS约120.77，平均响应时间61.81毫秒</li>
+                    <li>获取手机号API：50并发用户下，RPS约40.73，平均响应时间585.73毫秒</li>
+                </ul>
+            </div>
+            
+            <div id="auth" class="api-section">
+                <h1>认证方式</h1>
+                <p class="description">
+                    API使用基于Token的认证机制。在注册或登录成功后，系统会返回一个token，后续请求需要在参数中包含该token进行身份验证。
+                </p>
+                
+                <div class="section-title"><i class="ri-key-2-line"></i>获取Token</div>
+                <p>通过以下两种方式获取token：</p>
+                <ol>
+                    <li>用户注册 - 注册成功后返回token</li>
+                    <li>用户登录 - 登录成功后返回token</li>
+                </ol>
+                
+                <div class="section-title"><i class="ri-shield-check-line"></i>使用Token</div>
+                <p>在需要认证的API请求中，添加token参数：</p>
+                <div class="response-example">
+                    <div class="code">GET /api/balance?token=YOUR_TOKEN</div>
+                </div>
+                
+                <div class="section-title"><i class="ri-time-line"></i>Token有效期</div>
+                <p>Token有效期为24小时，过期后需要重新登录获取新token。</p>
+            </div>
+            
+            <div id="register" class="api-section">
+                <h1>用户注册</h1>
+                <div class="method-container">
+                    <span class="method post">POST</span>
+                    <span class="endpoint">/api/register</span>
+                </div>
+                
+                <p class="description">
+                    注册新用户并获取访问token。用户注册后可以使用系统提供的各种API服务。
+                </p>
+                
+                <div class="section-title"><i class="ri-arrow-right-circle-line"></i>请求参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必填</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>username</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户名，唯一</td>
+                        </tr>
+                        <tr>
+                            <td>password</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户密码</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户邮箱，唯一</td>
+                        </tr>
+                        <tr>
+                            <td>security_question</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>安全问题和答案，格式为"问题? 答案"</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-arrow-left-circle-line"></i>响应参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>success</td>
+                            <td>boolean</td>
+                            <td>请求是否成功</td>
+                        </tr>
+                        <tr>
+                            <td>message</td>
+                            <td>string</td>
+                            <td>响应消息</td>
+                        </tr>
+                        <tr>
+                            <td>user</td>
+                            <td>object</td>
+                            <td>用户信息对象</td>
+                        </tr>
+                        <tr>
+                            <td>user.token</td>
+                            <td>string</td>
+                            <td>访问令牌</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-error-warning-line"></i>状态码</div>
+                <div>
+                    <span class="status-code status-201"><i class="ri-checkbox-circle-line"></i>201</span> 用户创建成功
+                </div>
+                <div>
+                    <span class="status-code status-400"><i class="ri-close-circle-line"></i>400</span> 请求参数错误或用户名/邮箱已存在
+                </div>
+                
+                <div class="section-title"><i class="ri-terminal-box-line"></i>请求示例</div>
+                <div class="response-example">
+                    <div class="code">GET /api/register?username=testuser&password=testpassword&email=test@example.com&security_question=测试问题?%20测试答案</div>
+                </div>
+                
+                <div class="section-title"><i class="ri-code-s-slash-line"></i>响应示例</div>
+                <div class="response-example">
+                    <div class="code">{
+  "success": true,
+  "message": "用户注册成功",
+  "user": {
+    "id": 123,
+    "username": "testuser",
+    "email": "test@example.com",
+    "balance": 0.0,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsImV4cCI6MTYzNDU2Nzg5MH0.abcdefghijklmnopqrstuvwxyz"
+  }
+}</div>
+                </div>
+            </div>
+            
+            <div id="login" class="api-section">
+                <h1>用户登录</h1>
+                <div class="method-container">
+                    <span class="method post">POST</span>
+                    <span class="endpoint">/api/login</span>
+                </div>
+                
+                <p class="description">
+                    用户登录并获取访问token。登录成功后返回的token用于访问其他需要认证的API。
+                </p>
+                
+                <div class="section-title"><i class="ri-arrow-right-circle-line"></i>请求参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必填</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>username</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户名</td>
+                        </tr>
+                        <tr>
+                            <td>password</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户密码</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-arrow-left-circle-line"></i>响应参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>success</td>
+                            <td>boolean</td>
+                            <td>请求是否成功</td>
+                        </tr>
+                        <tr>
+                            <td>message</td>
+                            <td>string</td>
+                            <td>响应消息</td>
+                        </tr>
+                        <tr>
+                            <td>user</td>
+                            <td>object</td>
+                            <td>用户信息对象</td>
+                        </tr>
+                        <tr>
+                            <td>user.token</td>
+                            <td>string</td>
+                            <td>访问令牌</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-error-warning-line"></i>状态码</div>
+                <div>
+                    <span class="status-code status-200"><i class="ri-checkbox-circle-line"></i>200</span> 登录成功
+                </div>
+                <div>
+                    <span class="status-code status-401"><i class="ri-close-circle-line"></i>401</span> 用户名或密码错误
+                </div>
+                
+                <div class="section-title"><i class="ri-terminal-box-line"></i>请求示例</div>
+                <div class="response-example">
+                    <div class="code">GET /api/login?username=testuser&password=testpassword</div>
+                </div>
+                
+                <div class="section-title"><i class="ri-code-s-slash-line"></i>响应示例</div>
+                <div class="response-example">
+                    <div class="code">{
+  "success": true,
+  "message": "登录成功",
+  "user": {
+    "id": 123,
+    "username": "testuser",
+    "email": "test@example.com",
+    "balance": 100.0,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsImV4cCI6MTYzNDU2Nzg5MH0.abcdefghijklmnopqrstuvwxyz"
+  }
+}</div>
+                </div>
+            </div>
+            
+            <div id="balance" class="api-section">
+                <h1>查询余额</h1>
+                <div class="method-container">
+                    <span class="method get">GET</span>
+                    <span class="endpoint">/api/balance</span>
+                </div>
+                
+                <p class="description">
+                    查询用户账户余额。用户可以随时检查自己的账户余额，确保有足够的额度使用API服务。
+                </p>
+                
+                <div class="section-title"><i class="ri-arrow-right-circle-line"></i>请求参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必填</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>token</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户访问令牌</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-arrow-left-circle-line"></i>响应参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>success</td>
+                            <td>boolean</td>
+                            <td>请求是否成功</td>
+                        </tr>
+                        <tr>
+                            <td>message</td>
+                            <td>string</td>
+                            <td>响应消息</td>
+                        </tr>
+                        <tr>
+                            <td>balance</td>
+                            <td>float</td>
+                            <td>用户余额</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-error-warning-line"></i>状态码</div>
+                <div>
+                    <span class="status-code status-200"><i class="ri-checkbox-circle-line"></i>200</span> 查询成功
+                </div>
+                <div>
+                    <span class="status-code status-401"><i class="ri-close-circle-line"></i>401</span> 未授权访问
+                </div>
+                
+                <div class="section-title"><i class="ri-terminal-box-line"></i>请求示例</div>
+                <div class="response-example">
+                    <div class="code">GET /api/balance?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsImV4cCI6MTYzNDU2Nzg5MH0.abcdefghijklmnopqrstuvwxyz</div>
+                </div>
+                
+                <div class="section-title"><i class="ri-code-s-slash-line"></i>响应示例</div>
+                <div class="response-example">
+                    <div class="code">{
+  "success": true,
+  "message": "余额查询成功",
+  "balance": 100.0
+}</div>
+                </div>
+            </div>
+            
+            <div id="change-password" class="api-section">
+                <h1>修改密码</h1>
+                <div class="method-container">
+                    <span class="method post">POST</span>
+                    <span class="endpoint">/api/change_password</span>
+                </div>
+                
+                <p class="description">
+                    修改用户密码。为了确保账户安全，用户可以随时更新自己的密码。
+                </p>
+                
+                <div class="section-title"><i class="ri-arrow-right-circle-line"></i>请求参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必填</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>username</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户名</td>
+                        </tr>
+                        <tr>
+                            <td>old_password</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>旧密码</td>
+                        </tr>
+                        <tr>
+                            <td>new_password</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>新密码</td>
+                        </tr>
+                        <tr>
+                            <td>security_answer</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>安全问题的答案</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-arrow-left-circle-line"></i>响应参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>success</td>
+                            <td>boolean</td>
+                            <td>请求是否成功</td>
+                        </tr>
+                        <tr>
+                            <td>message</td>
+                            <td>string</td>
+                            <td>响应消息</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-error-warning-line"></i>状态码</div>
+                <div>
+                    <span class="status-code status-200"><i class="ri-checkbox-circle-line"></i>200</span> 密码修改成功
+                </div>
+                <div>
+                    <span class="status-code status-400"><i class="ri-close-circle-line"></i>400</span> 参数错误或安全问题答案错误
+                </div>
+                <div>
+                    <span class="status-code status-401"><i class="ri-close-circle-line"></i>401</span> 用户不存在或旧密码错误
+                </div>
+                
+                <div class="section-title"><i class="ri-terminal-box-line"></i>请求示例</div>
+                <div class="response-example">
+                    <div class="code">GET /api/change_password?username=testuser&old_password=oldpassword&new_password=newpassword&security_answer=测试答案</div>
+                </div>
+                
+                <div class="section-title"><i class="ri-code-s-slash-line"></i>响应示例</div>
+                <div class="response-example">
+                    <div class="code">{
+  "success": true,
+  "message": "密码修改成功"
+}</div>
+                </div>
+            </div>
+            
+            <div id="get-phone" class="api-section">
+                <h1>获取手机号</h1>
+                <div class="method-container">
+                    <span class="method get">GET</span>
+                    <span class="endpoint">/api/get_phone</span>
+                </div>
+                
+                <p class="description">
+                    获取用于接收短信验证码的手机号。系统会根据请求参数返回一个可用的手机号，用户可以指定运营商类型和号段类型。
+                </p>
+                
+                <div class="section-title"><i class="ri-arrow-right-circle-line"></i>请求参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必填</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>token</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户访问令牌</td>
+                        </tr>
+                        <tr>
+                            <td>project_id</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>项目ID</td>
+                        </tr>
+                        <tr>
+                            <td>carrier_type</td>
+                            <td>string</td>
+                            <td>否</td>
+                            <td>运营商类型(0:不限, 1:移动, 2:联通, 3:电信)</td>
+                        </tr>
+                        <tr>
+                            <td>number_type</td>
+                            <td>string</td>
+                            <td>否</td>
+                            <td>号段类型(0:不限, 1:虚拟运营商, 2:非虚拟运营商)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-arrow-left-circle-line"></i>响应参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>stat</td>
+                            <td>boolean</td>
+                            <td>请求是否成功</td>
+                        </tr>
+                        <tr>
+                            <td>message</td>
+                            <td>string</td>
+                            <td>响应消息</td>
+                        </tr>
+                        <tr>
+                            <td>code</td>
+                            <td>integer</td>
+                            <td>状态码</td>
+                        </tr>
+                        <tr>
+                            <td>data</td>
+                            <td>string</td>
+                            <td>手机号</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-error-warning-line"></i>状态码</div>
+                <div>
+                    <span class="status-code status-200"><i class="ri-checkbox-circle-line"></i>200</span> 获取手机号成功
+                </div>
+                <div>
+                    <span class="status-code status-400"><i class="ri-close-circle-line"></i>400</span> 参数错误
+                </div>
+                <div>
+                    <span class="status-code status-401"><i class="ri-close-circle-line"></i>401</span> 未授权访问
+                </div>
+                <div>
+                    <span class="status-code status-404"><i class="ri-close-circle-line"></i>404</span> 找不到可用手机号
+                </div>
+                
+                <div class="section-title"><i class="ri-terminal-box-line"></i>请求示例</div>
+                <div class="response-example">
+                    <div class="code">GET /api/get_phone?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsImV4cCI6MTYzNDU2Nzg5MH0.abcdefghijklmnopqrstuvwxyz&project_id=123456&carrier_type=0&number_type=0</div>
+                </div>
+                
+                <div class="section-title"><i class="ri-code-s-slash-line"></i>响应示例</div>
+                <div class="response-example">
+                    <div class="code">{
+  "stat": true,
+  "message": "获取手机号成功",
+  "code": 0,
+  "data": "13812345678"
+}</div>
+                </div>
+            </div>
+            
+            <div id="get-specified-phone" class="api-section">
+                <h1>获取指定手机号</h1>
+                <div class="method-container">
+                    <span class="method get">GET</span>
+                    <span class="endpoint">/api/get_specified_phone</span>
+                </div>
+                
+                <p class="description">
+                    获取指定的手机号用于接收短信验证码。用户可以指定特定的手机号，如果该手机号可用，系统将分配给用户使用。
+                </p>
+                
+                <div class="section-title"><i class="ri-arrow-right-circle-line"></i>请求参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必填</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>token</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户访问令牌</td>
+                        </tr>
+                        <tr>
+                            <td>project_id</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>项目ID</td>
+                        </tr>
+                        <tr>
+                            <td>phone</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>指定的手机号(11位)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-arrow-left-circle-line"></i>响应参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>stat</td>
+                            <td>boolean</td>
+                            <td>请求是否成功</td>
+                        </tr>
+                        <tr>
+                            <td>message</td>
+                            <td>string</td>
+                            <td>响应消息</td>
+                        </tr>
+                        <tr>
+                            <td>code</td>
+                            <td>integer</td>
+                            <td>状态码</td>
+                        </tr>
+                        <tr>
+                            <td>data</td>
+                            <td>string</td>
+                            <td>手机号</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-error-warning-line"></i>状态码</div>
+                <div>
+                    <span class="status-code status-200"><i class="ri-checkbox-circle-line"></i>200</span> 获取手机号成功
+                </div>
+                <div>
+                    <span class="status-code status-400"><i class="ri-close-circle-line"></i>400</span> 参数错误或手机号不可用
+                </div>
+                <div>
+                    <span class="status-code status-401"><i class="ri-close-circle-line"></i>401</span> 未授权访问
+                </div>
+                
+                <div class="section-title"><i class="ri-terminal-box-line"></i>请求示例</div>
+                <div class="response-example">
+                    <div class="code">GET /api/get_specified_phone?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsImV4cCI6MTYzNDU2Nzg5MH0.abcdefghijklmnopqrstuvwxyz&project_id=123456&phone=13812345678</div>
+                </div>
+                
+                <div class="section-title"><i class="ri-code-s-slash-line"></i>响应示例</div>
+                <div class="response-example">
+                    <div class="code">{
+  "stat": true,
+  "message": "获取指定手机号成功",
+  "code": 0,
+  "data": "13812345678"
+}</div>
+                </div>
+            </div>
+            
+            <div id="release-phone" class="api-section">
+                <h1>释放手机号</h1>
+                <div class="method-container">
+                    <span class="method get">GET</span>
+                    <span class="endpoint">/api/release_phone</span>
+                </div>
+                
+                <p class="description">
+                    释放不再使用的手机号，使其可以被其他用户获取。当用户完成验证码接收后，应当释放手机号以便其他用户使用。
+                </p>
+                
+                <div class="section-title"><i class="ri-arrow-right-circle-line"></i>请求参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必填</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>token</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户访问令牌</td>
+                        </tr>
+                        <tr>
+                            <td>project_id</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>项目ID</td>
+                        </tr>
+                        <tr>
+                            <td>phone</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>要释放的手机号</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-arrow-left-circle-line"></i>响应参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>message</td>
+                            <td>string</td>
+                            <td>响应消息</td>
+                        </tr>
+                        <tr>
+                            <td>data</td>
+                            <td>string</td>
+                            <td>释放结果</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-error-warning-line"></i>状态码</div>
+                <div>
+                    <span class="status-code status-200"><i class="ri-checkbox-circle-line"></i>200</span> 释放手机号成功
+                </div>
+                <div>
+                    <span class="status-code status-400"><i class="ri-close-circle-line"></i>400</span> 参数错误
+                </div>
+                <div>
+                    <span class="status-code status-401"><i class="ri-close-circle-line"></i>401</span> 未授权访问
+                </div>
+                
+                <div class="section-title"><i class="ri-terminal-box-line"></i>请求示例</div>
+                <div class="response-example">
+                    <div class="code">GET /api/release_phone?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsImV4cCI6MTYzNDU2Nzg5MH0.abcdefghijklmnopqrstuvwxyz&project_id=123456&phone=13812345678</div>
+                </div>
+                
+                <div class="section-title"><i class="ri-code-s-slash-line"></i>响应示例</div>
+                <div class="response-example">
+                    <div class="code">{
+  "message": "释放手机号成功",
+  "data": "success"
+}</div>
+                </div>
+            </div>
+            
+            <div id="blacklist-phone" class="api-section">
+                <h1>加黑手机号</h1>
+                <div class="method-container">
+                    <span class="method get">GET</span>
+                    <span class="endpoint">/api/blacklist_phone</span>
+                </div>
+                
+                <p class="description">
+                    将手机号加入黑名单，使其不能再用于接收验证码。如果某个手机号存在问题，用户可以将其加入黑名单。
+                </p>
+                
+                <div class="section-title"><i class="ri-arrow-right-circle-line"></i>请求参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必填</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>token</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户访问令牌</td>
+                        </tr>
+                        <tr>
+                            <td>project_id</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>项目ID</td>
+                        </tr>
+                        <tr>
+                            <td>phone</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>要加黑的手机号</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-arrow-left-circle-line"></i>响应参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>message</td>
+                            <td>string</td>
+                            <td>响应消息</td>
+                        </tr>
+                        <tr>
+                            <td>data</td>
+                            <td>string</td>
+                            <td>加黑结果</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-error-warning-line"></i>状态码</div>
+                <div>
+                    <span class="status-code status-200"><i class="ri-checkbox-circle-line"></i>200</span> 加黑手机号成功
+                </div>
+                <div>
+                    <span class="status-code status-400"><i class="ri-close-circle-line"></i>400</span> 参数错误
+                </div>
+                <div>
+                    <span class="status-code status-401"><i class="ri-close-circle-line"></i>401</span> 未授权访问
+                </div>
+                
+                <div class="section-title"><i class="ri-terminal-box-line"></i>请求示例</div>
+                <div class="response-example">
+                    <div class="code">GET /api/blacklist_phone?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsImV4cCI6MTYzNDU2Nzg5MH0.abcdefghijklmnopqrstuvwxyz&project_id=123456&phone=13812345678</div>
+                </div>
+                
+                <div class="section-title"><i class="ri-code-s-slash-line"></i>响应示例</div>
+                <div class="response-example">
+                    <div class="code">{
+  "message": "加黑手机号成功",
+  "data": "success"
+}</div>
+                </div>
+            </div>
+            
+            <div id="get-sms-code" class="api-section">
+                <h1>获取短信验证码</h1>
+                <div class="method-container">
+                    <span class="method get">GET</span>
+                    <span class="endpoint">/api/get_sms_code</span>
+                </div>
+                
+                <p class="description">
+                    获取指定手机号收到的短信验证码。系统会返回手机号收到的最新短信内容，其中包含验证码。
+                </p>
+                
+                <div class="section-title"><i class="ri-arrow-right-circle-line"></i>请求参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>必填</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>token</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>用户访问令牌</td>
+                        </tr>
+                        <tr>
+                            <td>project_id</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>项目ID</td>
+                        </tr>
+                        <tr>
+                            <td>phone</td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>接收验证码的手机号</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-arrow-left-circle-line"></i>响应参数</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>message</td>
+                            <td>string</td>
+                            <td>响应消息</td>
+                        </tr>
+                        <tr>
+                            <td>code</td>
+                            <td>integer</td>
+                            <td>状态码</td>
+                        </tr>
+                        <tr>
+                            <td>data</td>
+                            <td>string/null</td>
+                            <td>短信内容或错误信息</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-title"><i class="ri-error-warning-line"></i>状态码</div>
+                <div>
+                    <span class="status-code status-200"><i class="ri-checkbox-circle-line"></i>200</span> 获取验证码成功
+                </div>
+                <div>
+                    <span class="status-code status-400"><i class="ri-close-circle-line"></i>400</span> 参数错误
+                </div>
+                <div>
+                    <span class="status-code status-401"><i class="ri-close-circle-line"></i>401</span> 未授权访问
+                </div>
+                <div>
+                    <span class="status-code status-404"><i class="ri-close-circle-line"></i>404</span> 未收到验证码
+                </div>
+                
+                <div class="section-title"><i class="ri-terminal-box-line"></i>请求示例</div>
+                <div class="response-example">
+                    <div class="code">GET /api/get_sms_code?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsImV4cCI6MTYzNDU2Nzg5MH0.abcdefghijklmnopqrstuvwxyz&project_id=123456&phone=13812345678</div>
+                </div>
+                
+                <div class="section-title"><i class="ri-code-s-slash-line"></i>响应示例 - 成功</div>
+                <div class="response-example">
+                    <div class="code">{
+  "message": "获取验证码成功",
+  "code": 0,
+  "data": "【淘宝】您的验证码是123456，5分钟内有效。如非本人操作，请忽略本短信。"
+}</div>
+                </div>
+                
+                <div class="section-title"><i class="ri-code-s-slash-line"></i>响应示例 - 等待接收</div>
+                <div class="response-example">
+                    <div class="code">{
+  "message": "暂未收到验证码，请稍后再试",
+  "code": 1,
+  "data": null
+}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            &copy; 2023 短信验证码API服务 - 为开发者提供稳定、高效的短信验证码解决方案
+        </div>
+    </div>
+
+    <script>
+        // 导航链接点击事件
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // 移除所有链接的活动状态
+                document.querySelectorAll('.nav-link').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // 移除所有内容区域的活动状态
+                document.querySelectorAll('.api-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // 添加当前链接的活动状态
+                link.classList.add('active');
+                
+                // 显示对应的内容区域
+                const targetId = link.getAttribute('href').substring(1);
+                document.getElementById(targetId).classList.add('active');
+                
+                // 如果是移动设备，点击后隐藏侧边栏
+                if (window.innerWidth <= 768) {
+                    document.getElementById('sidebar').classList.remove('active');
+                }
+            });
+        });
+        
+        // 移动菜单点击事件
+        document.getElementById('mobile-menu').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+        
+        // 搜索功能
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const searchValue = e.target.value.toLowerCase();
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                const text = link.textContent.toLowerCase();
+                const parent = link.parentElement;
+                
+                if (text.includes(searchValue)) {
+                    parent.style.display = 'block';
+                } else {
+                    parent.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

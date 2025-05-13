@@ -1,0 +1,7 @@
+Flask==2.2.3
+Flask-Cors==3.0.10
+Flask-SQLAlchemy==3.0.3
+PyJWT==2.6.0
+gunicorn==20.1.0
+python-dotenv==1.0.0
+logging==0.4.9.6 
