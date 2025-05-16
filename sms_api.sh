@@ -53,6 +53,7 @@ start() {
     
     # 设置环境变量
     export FLASK_CONFIG=production
+    export SQLALCHEMY_DATABASE_URI="sqlite:///instance/sms_api.db"
     
     # 使用nohup在后台启动Gunicorn
     nohup ${VENV_DIR}/bin/gunicorn -w ${GUNICORN_WORKERS} -b ${BIND_ADDRESS} \
