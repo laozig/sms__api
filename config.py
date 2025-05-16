@@ -36,7 +36,7 @@ class ProductionConfig(Config):
     SECRET_KEY = os.environ.get('SECRET_KEY')
     
     # 生产环境推荐使用更可靠的数据库
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI', 'sqlite:///instance/sms_api.db')
     
     # 生产环境数据库连接池配置
     SQLALCHEMY_ENGINE_OPTIONS = {
