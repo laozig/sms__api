@@ -129,7 +129,30 @@ export FLASK_CONFIG=development
 
 ## 使用说明
 
-### 启动服务
+### 服务管理脚本
+
+为方便在Linux服务器上管理服务，可以使用提供的服务管理脚本：
+
+```bash
+# 赋予脚本执行权限
+chmod +x flask_service.sh
+
+# 启动服务
+./flask_service.sh start
+
+# 查看服务状态
+./flask_service.sh status
+
+# 停止服务
+./flask_service.sh stop
+
+# 重启服务
+./flask_service.sh restart
+```
+
+脚本会自动处理服务的后台运行、日志记录和进程管理，适合生产环境使用。
+
+### 开发环境启动
 
 ```bash
 # 开发环境
