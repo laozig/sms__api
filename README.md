@@ -74,6 +74,10 @@ venv\Scripts\activate
 # macOS/Linux
 python3 -m venv venv
 source venv/bin/activate
+
+拉取
+git pull origin main
+
 ```
 
 3. **安装依赖**
